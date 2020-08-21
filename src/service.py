@@ -1,8 +1,11 @@
 import numpy as np
 import math
 import os , sys
+
+#Setting project path to access utils package
 sys.path.append(os.pardir)
 
+import json
 import time
 import torch
 from utils import config as cnf
@@ -19,7 +22,7 @@ from struct import unpack
 
 def model_inference(model , frame):
     '''
-    Recive point cloud as numpy array.
+    Takes point cloud as n-dim numpy array, and forward pass through Complex YOLO Model.
     '''       
     no_points = int(frame.shape[0]/4)
     frame = frame.reshape(no_points,4)
@@ -55,7 +58,7 @@ def model_inference(model , frame):
     RGB_Map *= 255
     RGB_Map = RGB_Map.astype(np.uint8)
     dict_detection = {}
-    print(img_detections)    
+        
     for detections in img_detections:
         if detections is None:
             continue
@@ -66,7 +69,17 @@ def model_inference(model , frame):
             print('')
         for x, y, w, l, im, re, conf, cls_conf, cls_pred in detections:
             yaw = np.arctan2(im, re)
-    return '0.0 , 0.0'            
+            
+            dict_detection[float(cls_pred)] = { 'x': float(x) , 'y': float(y) , 'w': float(w) , 'l':float(l), 
+                'im': float(im) ,'conf':float(conf)
+            }
+    
+    #Converting python dictionary into json.
+    json_dict = json.dumps(dict_detection)
+    #Convert it into binary format.
+    results   = json.loads(json_dict.decode('utf-8'))
+
+    return results            
 
 if __name__ == '__main__':
 
