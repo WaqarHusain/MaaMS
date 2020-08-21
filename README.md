@@ -7,9 +7,9 @@
 ##### To Run the code
      1. $ cd src/
      2. $ python service.py
-
+### Note
 ##### You have to first download the Yolo weights, which can be done by running checkpoints/downloads_weight.py .
 
-###### Task Pending.
+##### Task Pending.
 1. Conversion of coordinates from point cloud to unity image format.
 2. Update service.py to check for weights, if not available first download it using checkpoints/downloads_weight.py
